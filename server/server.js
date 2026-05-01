@@ -22,17 +22,7 @@ const server = http.createServer(app);
 
 // CORS configuration
 const corsOptions = {
-  origin: [
-    process.env.CLIENT_URL || "http://localhost:5173",
-    "https://upamkuma.github.io",
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5175",
-    "http://localhost:5176",
-    "http://localhost:5177",
-    "http://localhost:5178",
-    "http://localhost:5179",
-  ],
+  origin: true, // Allow all origins
   credentials: true,
 };
 
