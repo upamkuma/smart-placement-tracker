@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance with base URL from env
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5001/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -96,7 +96,7 @@ export const resumeAPI = {
   // Get the download/view URL for the resume
   getDownloadUrl: () => {
     const token = localStorage.getItem("token");
-    const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+    const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
     return `${baseURL}/resume/download?token=${token}`;
   },
 

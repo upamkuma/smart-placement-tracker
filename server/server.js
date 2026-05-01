@@ -24,6 +24,7 @@ const server = http.createServer(app);
 const corsOptions = {
   origin: [
     process.env.CLIENT_URL || "http://localhost:5173",
+    "https://upamkuma.github.io",
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
