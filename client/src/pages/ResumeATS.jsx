@@ -510,11 +510,16 @@ const ResumeATS = () => {
         {/* Right: Results Section */}
         <div>
           {!results && !analyzing ? (
-            <div className="glass-card p-8 h-full flex flex-col items-center justify-center text-center min-h-[600px]">
-              <div className="w-20 h-20 bg-dark-800/60 rounded-full flex items-center justify-center mb-4">
-                <span className="text-4xl">📊</span>
+            <div className="glass-card p-8 h-full flex flex-col items-center justify-center text-center min-h-[600px] overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-b from-primary-500/5 to-transparent pointer-events-none"></div>
+              <div className="w-full max-w-[280px] aspect-square mb-6 relative">
+                <img 
+                  src="/smart-placement-tracker/ats-illustration.png" 
+                  alt="ATS Scanner Illustration" 
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_20px_rgba(16,185,129,0.2)] animate-float" 
+                />
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">ATS Score Analysis</h3>
+              <h3 className="text-xl font-bold text-white mb-2">ATS Score Analysis</h3>
               <p className="text-dark-400 text-sm max-w-xs mb-6">
                 Upload or paste your resume and a job description to see your ATS compatibility score
               </p>

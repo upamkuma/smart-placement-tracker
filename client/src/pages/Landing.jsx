@@ -61,7 +61,7 @@ const Landing = () => {
             
             {/* The AI Generated Hero Image */}
             <img 
-              src="/hero-image.png" 
+              src="/smart-placement-tracker/hero-image.png" 
               alt="Professionals using Smart Placement Tracker" 
               className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(99,102,241,0.3)]"
             />
@@ -101,29 +101,66 @@ const Landing = () => {
       </div>
       
       {/* Features Section */}
-      <div className="relative z-10 bg-dark-900/40 border-t border-white/5 py-12 mt-10">
+      <div className="relative z-10 py-24 mt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="p-6 rounded-2xl bg-dark-800/40 border border-white/5">
-              <div className="w-12 h-12 mx-auto bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Supercharge Your Search</h2>
+            <p className="text-dark-400 max-w-2xl mx-auto">Everything you need to manage your applications and stand out to recruiters in one place.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* Feature 1: Kanban */}
+            <div className="glass-card-premium group hover:border-primary-500/50 transition-all duration-500 overflow-hidden flex flex-col">
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src="/smart-placement-tracker/kanban-tracking.png" 
+                  alt="Kanban Tracking" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                />
               </div>
-              <h3 className="text-white font-semibold mb-2">Kanban Tracking</h3>
-              <p className="text-sm text-dark-400">Organize applications effortlessly with drag-and-drop boards.</p>
+              <div className="p-8">
+                <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center mb-6">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">Visual Kanban</h3>
+                <p className="text-dark-300 leading-relaxed">Organize applications with a sleek drag-and-drop board. Never miss a deadline or follow-up again.</p>
+              </div>
             </div>
-            <div className="p-6 rounded-2xl bg-dark-800/40 border border-white/5">
-              <div className="w-12 h-12 mx-auto bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+
+            {/* Feature 2: ATS */}
+            <div className="glass-card-premium group hover:border-emerald-500/50 transition-all duration-500 overflow-hidden flex flex-col">
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src="/smart-placement-tracker/ats-analysis.png" 
+                  alt="ATS Analysis" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                />
               </div>
-              <h3 className="text-white font-semibold mb-2">ATS Resume Analysis</h3>
-              <p className="text-sm text-dark-400">Get AI-powered scores and missing keywords instantly.</p>
+              <div className="p-8">
+                <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-xl flex items-center justify-center mb-6">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">ATS Analysis</h3>
+                <p className="text-dark-300 leading-relaxed">Our AI scans your resume against job descriptions, giving you a score and identifying missing keywords.</p>
+              </div>
             </div>
-            <div className="p-6 rounded-2xl bg-dark-800/40 border border-white/5">
-              <div className="w-12 h-12 mx-auto bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+
+            {/* Feature 3: Smart Assistant */}
+            <div className="glass-card-premium group hover:border-purple-500/50 transition-all duration-500 overflow-hidden flex flex-col">
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src="/smart-placement-tracker/interview-bot.png" 
+                  alt="Smart Assistant" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                />
               </div>
-              <h3 className="text-white font-semibold mb-2">Smart Assistant</h3>
-              <p className="text-sm text-dark-400">Mock interviews and custom tips generated just for you.</p>
+              <div className="p-8">
+                <div className="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center mb-6">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">AI Coach</h3>
+                <p className="text-dark-300 leading-relaxed">Get personalized mock interview questions and expert tips tailored to each specific job role.</p>
+              </div>
             </div>
           </div>
         </div>

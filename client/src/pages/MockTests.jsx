@@ -336,8 +336,12 @@ const MockTests = () => {
           <div className="glass-card p-6 md:p-8">
             {!mcqStarted ? (
               <div className="text-center py-16">
-                <div className="w-24 h-24 bg-dark-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-primary-500/30 shadow-[0_0_40px_rgba(99,102,241,0.2)]">
-                  <span className="text-5xl">💻</span>
+                <div className="w-full max-w-[320px] aspect-video mx-auto mb-10 relative">
+                  <img 
+                    src="/smart-placement-tracker/assessment-illustration.png" 
+                    alt="Assessment Illustration" 
+                    className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(99,102,241,0.2)] animate-float" 
+                  />
                 </div>
                 <h2 className="text-3xl font-bold text-white mb-4">Software Engineering Assessment</h2>
                 <p className="text-dark-300 mb-8 max-w-lg mx-auto">Test your core knowledge in React, JavaScript, and CSS. Get instant results and detailed explanations.</p>
@@ -444,10 +448,14 @@ const MockTests = () => {
         {/* 2. Audio Interview Section */}
         {activeTab === "audio" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="glass-card p-8 flex flex-col items-center justify-center min-h-[450px] relative overflow-hidden text-center">
+            <div className="glass-card p-8 flex flex-col items-center justify-center min-h-[450px] relative overflow-hidden text-center group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-900/10 to-purple-900/10"></div>
-              <div className="w-32 h-32 mb-6 rounded-full bg-dark-900 border-4 border-primary-500/50 flex items-center justify-center shadow-[0_0_50px_rgba(99,102,241,0.3)] relative z-10">
-                <span className="text-6xl">🤖</span>
+              <div className="w-full max-w-[350px] aspect-square mb-6 relative z-10 transition-transform duration-700 group-hover:scale-105">
+                <img 
+                  src="/smart-placement-tracker/interview-illustration.png" 
+                  alt="AI Interview Illustration" 
+                  className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(139,92,246,0.3)]" 
+                />
               </div>
               <h3 className="text-2xl font-bold text-white mb-4 z-10">AI Recruiter</h3>
               <div className="bg-dark-900/80 border border-white/5 p-6 rounded-2xl z-10 w-full max-w-sm shadow-xl">
