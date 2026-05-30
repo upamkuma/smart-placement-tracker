@@ -2,10 +2,9 @@ import { io } from "socket.io-client";
 
 // In production, VITE_API_URL is undefined (falls back to Render), locally it's "/api" (proxy)
 // For socket, we always need the full server URL (can't use Vite proxy for WebSockets)
-const SOCKET_URL =
-  import.meta.env.VITE_API_URL === "/api" || !import.meta.env.VITE_API_URL
-    ? "https://smart-placement-tracker-2.onrender.com"
-    : import.meta.env.VITE_API_URL.replace("/api", "");
+const SOCKET_URL = import.meta.env.DEV
+  ? "http://localhost:5001"
+  : "https://smart-placement-tracker-2.onrender.com";
 
 let socket = null;
 
