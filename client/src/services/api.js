@@ -31,8 +31,8 @@ api.interceptors.response.use(
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       // Redirect to login if not already there
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      if (!window.location.pathname.endsWith("/login")) {
+        window.location.href = `${import.meta.env.BASE_URL}login`;
       }
     }
     return Promise.reject(error);

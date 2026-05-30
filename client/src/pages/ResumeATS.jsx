@@ -514,7 +514,7 @@ const ResumeATS = () => {
               <div className="absolute inset-0 bg-gradient-to-b from-primary-500/5 to-transparent pointer-events-none"></div>
               <div className="w-full max-w-[280px] aspect-square mb-6 relative">
                 <img 
-                  src="/smart-placement-tracker/ats-illustration.png" 
+                  src={`${import.meta.env.BASE_URL}ats-illustration.png`} 
                   alt="ATS Scanner Illustration" 
                   className="w-full h-full object-contain filter drop-shadow-[0_0_20px_rgba(16,185,129,0.2)] animate-float" 
                 />

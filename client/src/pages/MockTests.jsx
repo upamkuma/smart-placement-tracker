@@ -338,7 +338,7 @@ const MockTests = () => {
               <div className="text-center py-16">
                 <div className="w-full max-w-[320px] aspect-video mx-auto mb-10 relative">
                   <img 
-                    src="/smart-placement-tracker/assessment-illustration.png" 
+                    src={`${import.meta.env.BASE_URL}assessment-illustration.png`} 
                     alt="Assessment Illustration" 
                     className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(99,102,241,0.2)] animate-float" 
                   />
@@ -452,7 +452,7 @@ const MockTests = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-primary-900/10 to-purple-900/10"></div>
               <div className="w-full max-w-[350px] aspect-square mb-6 relative z-10 transition-transform duration-700 group-hover:scale-105">
                 <img 
-                  src="/smart-placement-tracker/interview-illustration.png" 
+                  src={`${import.meta.env.BASE_URL}interview-illustration.png`} 
                   alt="AI Interview Illustration" 
                   className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(139,92,246,0.3)]" 
                 />

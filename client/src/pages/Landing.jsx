@@ -64,7 +64,7 @@ const Landing = () => {
           <div className="relative w-full aspect-square sm:aspect-auto sm:h-[450px] lg:h-[550px] flex items-center justify-center">
             
             <img 
-              src="/smart-placement-tracker/hero-image.png" 
+              src={`${import.meta.env.BASE_URL}hero-image.png`} 
               alt="Professionals using Smart Placement Tracker" 
               className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_0_40px_rgba(99,102,241,0.25)]"
             />
@@ -115,7 +115,7 @@ const Landing = () => {
             <div className="glass-card-premium group hover:border-primary-500/50 transition-all duration-500 overflow-hidden flex flex-col">
               <div className="h-40 sm:h-48 overflow-hidden">
                 <img 
-                  src="/smart-placement-tracker/kanban-tracking.png" 
+                  src={`${import.meta.env.BASE_URL}kanban-tracking.png`} 
                   alt="Kanban Tracking" 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 />
@@ -133,7 +133,7 @@ const Landing = () => {
             <div className="glass-card-premium group hover:border-emerald-500/50 transition-all duration-500 overflow-hidden flex flex-col">
               <div className="h-40 sm:h-48 overflow-hidden">
                 <img 
-                  src="/smart-placement-tracker/ats-analysis.png" 
+                  src={`${import.meta.env.BASE_URL}ats-analysis.png`} 
                   alt="ATS Analysis" 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 />
@@ -151,7 +151,7 @@ const Landing = () => {
             <div className="glass-card-premium group hover:border-purple-500/50 transition-all duration-500 overflow-hidden flex flex-col sm:col-span-2 lg:col-span-1">
               <div className="h-40 sm:h-48 overflow-hidden">
                 <img 
-                  src="/smart-placement-tracker/interview-bot.png" 
+                  src={`${import.meta.env.BASE_URL}interview-bot.png`} 
                   alt="Smart Assistant" 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 />

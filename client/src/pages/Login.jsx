@@ -47,7 +47,7 @@ const Login = () => {
           <div className="absolute inset-0 bg-dark-900/40 pointer-events-none"></div>
           <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center">
             <img 
-              src="/smart-placement-tracker/auth-illustration.png" 
+              src={`${import.meta.env.BASE_URL}auth-illustration.png`} 
               alt="Secure Login" 
               className="w-full h-full max-h-[400px] object-contain filter drop-shadow-[0_0_30px_rgba(99,102,241,0.3)] animate-float" 
             />
