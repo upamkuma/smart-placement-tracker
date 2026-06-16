@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Placement Tracker - System Design & Documentation</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark-900: #0f172a;
+      --dark-800: #1e293b;
+      --dark-700: #334155;
+      --dark-100: #f1f5f9;
+      --text-main: #334155;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      background-color: #f8fafc;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 50px;
+      border-radius: 16px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 25px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .header-tag {
+      background: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: var(--dark-900);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-top: 5px;
+    }
+
+    h2 {
+      color: var(--dark-900);
+      font-size: 1.5rem;
+      border-left: 5px solid var(--primary);
+      padding-left: 15px;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    h3 {
+      color: var(--dark-800);
+      font-size: 1.15rem;
+      margin-top: 25px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    ul, ol {
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: var(--dark-900);
+      font-weight: 700;
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    code {
+      font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      background: #f1f5f9;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: #0f172a;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #f1f5f9;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+
+    .diagram-container {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 30px;
+      border-radius: 12px;
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .diagram-container svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .badge-auth { background: #dbeafe; color: #1e40af; }
+    .badge-job { background: #dcfce7; color: #166534; }
+    .badge-resume { background: #fef9c3; color: #854d0e; }
+    .badge-chat { background: #f3e8ff; color: #6b21a8; }
+    .badge-notif { background: #fee2e2; color: #991b1b; }
+
+    .print-instructions {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .print-instructions h4 {
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .container {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .print-instructions {
+        display: none;
+      }
+      h2 {
+        page-break-before: always;
+      }
+      table {
+        page-break-inside: avoid;
+      }
+      pre {
+        page-break-inside: avoid;
+        white-space: pre-wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="print-instructions">
+      <h4>🖨️ How to Save this Document as a PDF:</h4>
+      <p>Press <strong>Cmd + P</strong> (macOS) or <strong>Ctrl + P</strong> (Windows) to open the browser print dialog. Change the Destination to <strong>"Save as PDF"</strong>. In More Settings, ensure <strong>"Background graphics"</strong> is checked to preserve layouts, gradients, and custom colors.</p>
+    </div>
+
+    <header>
+      <div class="header-tag">System Design & Tech Stack Specification</div>
+      <h1>Smart Placement Tracker (SPT)</h1>
+      <div class="subtitle">Complete Technical Architecture, Features, and Database Documentation</div>
+    </header>
+
+    <section id="executive-summary">
+      <h2>1. Executive Summary & Overview</h2>
+      <p>The <strong>Smart Placement Tracker (SPT)</strong> is a full-stack MERN application built to help university students organize, track, and streamline their placement job applications. Incorporating a dynamic drag-and-drop Kanban Board, real-time community chat rooms, a customized Resume ATS keyword scanner, and an interactive mock interview prep hub, the application serves as a comprehensive tool during placement seasons.</p>
+    </section>
+
+    <section id="architecture">
+      <h2>2. High-Level System Architecture</h2>
+      <p>The application is designed around three main layers: a rich SPA client tier built with React and Vite, a stateless RESTful and WebSocket server tier powered by Express and Socket.IO, and a document database tier managed via MongoDB and Mongoose schemas.</p>
+      
+      <div class="diagram-container">
+        <h3>System Architecture Diagram</h3>
+        <!-- Embed SVG Diagram -->
+        <svg viewBox="0 0 800 460" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background -->
+          <rect width="800" height="460" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+          
+          <!-- Client Tier Box -->
+          <rect x="30" y="30" width="220" height="400" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+          <text x="140" y="55" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle">CLIENT TIER (React SPA)</text>
+          
+          <!-- Client Components -->
+          <rect x="50" y="80" width="180" height="40" rx="4" fill="#ffffff" stroke="#93c5fd"/>
+          <text x="140" y="105" font-family="Inter, sans-serif" font-size="12" fill="#1e40af" text-anchor="middle">Dashboard (Kanban UI)</text>
+          
+          <rect x="50" y="135" width="180" height="40" rx="4" fill="#ffffff" stroke="#93c5fd"/>
+          <text x="140" y="160" font-family="Inter, sans-serif" font-size="12" fill="#1e40af" text-anchor="middle">ResumeATS (Parsing Engine)</text>
+          
+          <rect x="50" y="190" width="180" height="40" rx="4" fill="#ffffff" stroke="#93c5fd"/>
+          <text x="140" y="215" font-family="Inter, sans-serif" font-size="12" fill="#1e40af" text-anchor="middle">MockTests (Voice Interview)</text>
+          
+          <rect x="50" y="245" width="180" height="40" rx="4" fill="#ffffff" stroke="#93c5fd"/>
+          <text x="140" y="270" font-family="Inter, sans-serif" font-size="12" fill="#1e40af" text-anchor="middle">Chat rooms (Socket.IO client)</text>
+
+          <rect x="50" y="300" width="180" height="40" rx="4" fill="#ffffff" stroke="#93c5fd"/>
+          <text x="140" y="325" font-family="Inter, sans-serif" font-size="12" fill="#1e40af" text-anchor="middle">Axios HTTP (api.js)</text>
+          
+          <rect x="50" y="355" width="180" height="45" rx="4" fill="#ffffff" stroke="#93c5fd"/>
+          <text x="140" y="375" font-family="Inter, sans-serif" font-size="11" fill="#1e40af" text-anchor="middle">HTML5 Web Speech API</text>
+          <text x="140" y="390" font-family="Inter, sans-serif" font-size="9" fill="#60a5fa" text-anchor="middle">(SpeechRecognition & Synthesis)</text>
+          
+          <!-- Server Tier Box -->
+          <rect x="340" y="30" width="220" height="400" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="450" y="55" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#4c1d95" text-anchor="middle">SERVER TIER (Node & Express)</text>
+          
+          <!-- Server Components -->
+          <rect x="360" y="80" width="180" height="40" rx="4" fill="#ffffff" stroke="#ddd6fe"/>
+          <text x="450" y="105" font-family="Inter, sans-serif" font-size="12" fill="#5b21b6" text-anchor="middle">JWT Verification Middleware</text>
+          
+          <rect x="360" y="135" width="180" height="40" rx="4" fill="#ffffff" stroke="#ddd6fe"/>
+          <text x="450" y="160" font-family="Inter, sans-serif" font-size="12" fill="#5b21b6" text-anchor="middle">Job Controller (Mongoose CRUD)</text>
+          
+          <rect x="360" y="190" width="180" height="45" rx="4" fill="#ffffff" stroke="#ddd6fe"/>
+          <text x="450" y="210" font-family="Inter, sans-serif" font-size="12" fill="#5b21b6" text-anchor="middle">Resume Controller</text>
+          <text x="450" y="225" font-family="Inter, sans-serif" font-size="9" fill="#a78bfa" text-anchor="middle">(Multer + pdf-parse + mammoth)</text>
+          
+          <rect x="360" y="250" width="180" height="40" rx="4" fill="#ffffff" stroke="#ddd6fe"/>
+          <text x="450" y="275" font-family="Inter, sans-serif" font-size="12" fill="#5b21b6" text-anchor="middle">Socket.IO Server Connection</text>
+          
+          <rect x="360" y="305" width="180" height="40" rx="4" fill="#ffffff" stroke="#ddd6fe"/>
+          <text x="450" y="330" font-family="Inter, sans-serif" font-size="12" fill="#5b21b6" text-anchor="middle">SPT Bot Response System</text>
+          
+          <rect x="360" y="360" width="180" height="40" rx="4" fill="#ffffff" stroke="#ddd6fe"/>
+          <text x="450" y="385" font-family="Inter, sans-serif" font-size="12" fill="#5b21b6" text-anchor="middle">Notification Dispatcher</text>
+
+          <!-- Database Tier Box -->
+          <rect x="630" y="130" width="140" height="200" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+          <text x="700" y="155" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="#064e3b" text-anchor="middle">DATABASE</text>
+          <text x="700" y="172" font-family="Inter, sans-serif" font-size="10" fill="#047857" text-anchor="middle">(MongoDB Atlas)</text>
+          
+          <!-- Database Tables -->
+          <rect x="645" y="195" width="110" height="25" rx="3" fill="#ffffff" stroke="#a7f3d0"/>
+          <text x="700" y="212" font-family="Inter, sans-serif" font-size="10" fill="#047857" text-anchor="middle">Users / Resumes</text>
+          
+          <rect x="645" y="230" width="110" height="25" rx="3" fill="#ffffff" stroke="#a7f3d0"/>
+          <text x="700" y="247" font-family="Inter, sans-serif" font-size="10" fill="#047857" text-anchor="middle">Jobs / Interviews</text>
+          
+          <rect x="645" y="265" width="110" height="25" rx="3" fill="#ffffff" stroke="#a7f3d0"/>
+          <text x="700" y="282" font-family="Inter, sans-serif" font-size="10" fill="#047857" text-anchor="middle">Messages / Notifs</text>
+
+          <!-- Connecting Arrows (SVG markers) -->
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+            </marker>
+            <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
+            </marker>
+            <marker id="arrow-purple" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6"/>
+            </marker>
+          </defs>
+
+          <!-- UI to APIs connections -->
+          <path d="M 230 320 L 360 100" stroke="#3b82f6" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)" stroke-dasharray="4"/>
+          <path d="M 230 320 L 360 155" stroke="#3b82f6" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)"/>
+          <path d="M 230 155 L 360 210" stroke="#3b82f6" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)"/>
+          <path d="M 230 265 L 360 270" stroke="#8b5cf6" stroke-width="1.5" fill="none" marker-end="url(#arrow-purple)" stroke-dasharray="1"/>
+          
+          <!-- Server to DB Connections -->
+          <path d="M 540 155 L 630 200" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 540 210 L 630 210" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+          <path d="M 540 270 L 630 250" stroke="#475569" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="features-matrix">
+      <h2>3. Core Features & Tech Stack Application</h2>
+      <p>The application employs several targeted libraries and custom logic functions to support specific user workflows:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Module Name</th>
+            <th>Primary Files</th>
+            <th>Description & Logic Flow</th>
+            <th>Specific Technology Used</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>User Session / Auth</strong></td>
+            <td>
+              <code>AuthContext.jsx</code><br>
+              <code>api.js</code><br>
+              <code>authController.js</code>
+            </td>
+            <td>Stateless JWT generation on login/registration. Credentials verified against DB using salted Bcrypt hashes. Extracted JWT token is set automatically in localStorage and sent in Axios headers via interceptors.</td>
+            <td>
+              <span class="badge badge-auth">React Context</span>
+              <span class="badge badge-auth">Axios</span>
+              <span class="badge badge-auth">JSON Web Tokens</span>
+              <span class="badge badge-auth">BcryptJS</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Kanban Job Tracker</strong></td>
+            <td>
+              <code>Dashboard.jsx</code><br>
+              <code>JobCard.jsx</code><br>
+              <code>KanbanColumn.jsx</code><br>
+              <code>jobController.js</code>
+            </td>
+            <td>Drag-and-drop board layouts displaying jobs by stage. Updates database statuses asynchronously via a PATCH endpoint without requiring a page reload. Triggers in-app alerts on status adjustments.</td>
+            <td>
+              <span class="badge badge-job">React DnD</span>
+              <span class="badge badge-job">Tailwind CSS</span>
+              <span class="badge badge-job">Express Patch</span>
+              <span class="badge badge-job">Mongoose</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Resume ATS Parser</strong></td>
+            <td>
+              <code>ResumeATS.jsx</code><br>
+              <code>fileParser.js</code><br>
+              <code>atsAnalyzer.js</code><br>
+              <code>resumeController.js</code>
+            </td>
+            <td>Pulls text directly from files. Runs in the client via <code>pdfjs-dist</code> and <code>mammoth</code>. Falls back to backend upload & parsing via <code>pdf-parse</code> and <code>mammoth</code>. Analyzes text via Regex keywords.</td>
+            <td>
+              <span class="badge badge-resume">PDFJS-dist</span>
+              <span class="badge badge-resume">Mammoth.js</span>
+              <span class="badge badge-resume">Multer</span>
+              <span class="badge badge-resume">pdf-parse</span>
+              <span class="badge badge-resume">JS RegExp</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>AI Audio Interviewer</strong></td>
+            <td>
+              <code>MockTests.jsx</code>
+            </td>
+            <td>Provides an interactive vocal mock interview. The browser reads out standard question sheets aloud and records speech from the user's microphone, writing down answers live.</td>
+            <td>
+              <span class="badge badge-auth">SpeechRecognition</span>
+              <span class="badge badge-auth">SpeechSynthesis</span>
+              <span class="badge badge-auth">Web Speech API</span>
+              <span class="badge badge-auth">Canvas Confetti</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Real-time Rooms Chat</strong></td>
+            <td>
+              <code>Chat.jsx</code><br>
+              <code>socket.js</code> (client)<br>
+              <code>socket.js</code> (server)
+            </td>
+            <td>Real-time messaging inside channels with active user lists and typing status indicators. Automatically fires tips to the room when the integrated helper bot detects placement keywords.</td>
+            <td>
+              <span class="badge badge-chat">Socket.IO</span>
+              <span class="badge badge-chat">WebSockets</span>
+              <span class="badge badge-chat">Auto Bot Engine</span>
+              <span class="badge badge-chat">Mongoose Hooks</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="database-schema">
+      <h2>4. Database Schema Structure</h2>
+      <p>The MongoDB database structure manages the relations between users, jobs, messages, notifications, and resumes.</p>
+      
+      <div class="diagram-container">
+        <h3>Database Relationships Entity-Relationship (ER) Diagram</h3>
+        <!-- Embed SVG ER Diagram -->
+        <svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background -->
+          <rect width="800" height="360" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+          
+          <!-- User Schema Box -->
+          <rect x="30" y="30" width="160" height="110" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+          <path d="M 30 65 L 190 65" stroke="#3b82f6" stroke-width="1"/>
+          <text x="110" y="50" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#1e3a8a" text-anchor="middle">USER SCHEMA</text>
+          <text x="45" y="82" font-family="Inter, sans-serif" font-size="10" fill="#1e40af">_id (PK)</text>
+          <text x="45" y="100" font-family="Inter, sans-serif" font-size="10" fill="#1e40af">name</text>
+          <text x="45" y="118" font-family="Inter, sans-serif" font-size="10" fill="#1e40af">email (unique)</text>
+          
+          <!-- Resume Schema Box -->
+          <rect x="30" y="210" width="160" height="120" rx="6" fill="#fef9c3" stroke="#eab308" stroke-width="2"/>
+          <path d="M 30 245 L 190 245" stroke="#eab308" stroke-width="1"/>
+          <text x="110" y="230" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#854d0e" text-anchor="middle">RESUME SCHEMA</text>
+          <text x="45" y="262" font-family="Inter, sans-serif" font-size="10" fill="#854d0e">user (FK)</text>
+          <text x="45" y="280" font-family="Inter, sans-serif" font-size="10" fill="#854d0e">fileName</text>
+          <text x="45" y="298" font-family="Inter, sans-serif" font-size="10" fill="#854d0e">extractedText</text>
+          <text x="45" y="316" font-family="Inter, sans-serif" font-size="10" fill="#854d0e">wordCount</text>
+
+          <!-- Job Schema Box -->
+          <rect x="320" y="30" width="180" height="150" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+          <path d="M 320 65 L 500 65" stroke="#22c55e" stroke-width="1"/>
+          <text x="410" y="50" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#166534" text-anchor="middle">JOB APPLICATION</text>
+          <text x="335" y="82" font-family="Inter, sans-serif" font-size="10" fill="#166534">user (FK)</text>
+          <text x="335" y="100" font-family="Inter, sans-serif" font-size="10" fill="#166534">company / role</text>
+          <text x="335" y="118" font-family="Inter, sans-serif" font-size="10" fill="#166534">status (enum)</text>
+          <text x="335" y="136" font-family="Inter, sans-serif" font-size="10" fill="#166534">interviewDate / Time</text>
+          <text x="335" y="154" font-family="Inter, sans-serif" font-size="10" fill="#166534">feedbackGood / Bad</text>
+
+          <!-- Message Schema Box -->
+          <rect x="600" y="210" width="170" height="110" rx="6" fill="#f3e8ff" stroke="#a855f7" stroke-width="2"/>
+          <path d="M 600 245 L 770 245" stroke="#a855f7" stroke-width="1"/>
+          <text x="685" y="230" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#6b21a8" text-anchor="middle">MESSAGE SCHEMA</text>
+          <text x="615" y="262" font-family="Inter, sans-serif" font-size="10" fill="#6b21a8">room (string)</text>
+          <text x="615" y="280" font-family="Inter, sans-serif" font-size="10" fill="#6b21a8">senderName</text>
+          <text x="615" y="298" font-family="Inter, sans-serif" font-size="10" fill="#6b21a8">text</text>
+
+          <!-- Notification Schema Box -->
+          <rect x="600" y="30" width="170" height="120" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+          <path d="M 600 65 L 770 65" stroke="#ef4444" stroke-width="1"/>
+          <text x="685" y="50" font-family="Inter, sans-serif" font-size="12" font-weight="bold" fill="#991b1b" text-anchor="middle">NOTIFICATION</text>
+          <text x="615" y="82" font-family="Inter, sans-serif" font-size="10" fill="#991b1b">user (FK)</text>
+          <text x="615" y="100" font-family="Inter, sans-serif" font-size="10" fill="#991b1b">job (FK)</text>
+          <text x="615" y="118" font-family="Inter, sans-serif" font-size="10" fill="#991b1b">title / message</text>
+          <text x="615" y="136" font-family="Inter, sans-serif" font-size="10" fill="#991b1b">read (boolean)</text>
+
+          <!-- Relationships Lines -->
+          <!-- User to Job (1 to Many) -->
+          <path d="M 190 85 L 320 85" stroke="#475569" stroke-width="1.5" fill="none"/>
+          <circle cx="195" cy="85" r="3" fill="#475569"/>
+          <path d="M 312 80 L 320 85 L 312 90" stroke="#475569" stroke-width="1.5" fill="none"/>
+
+          <!-- User to Resume (1 to 1) -->
+          <path d="M 110 140 L 110 210" stroke="#475569" stroke-width="1.5" fill="none"/>
+          <circle cx="110" cy="145" r="3" fill="#475569"/>
+          <circle cx="110" cy="205" r="3" fill="#475569"/>
+
+          <!-- User to Notification (1 to Many) -->
+          <path d="M 190 50 L 600 50" stroke="#475569" stroke-width="1.5" fill="none"/>
+          <circle cx="195" cy="50" r="3" fill="#475569"/>
+          <path d="M 592 45 L 600 50 L 592 55" stroke="#475569" stroke-width="1.5" fill="none"/>
+
+          <!-- Job to Notification (1 to Many) -->
+          <path d="M 500 100 L 600 100" stroke="#475569" stroke-width="1.5" fill="none"/>
+          <circle cx="505" cy="100" r="3" fill="#475569"/>
+          <path d="M 592 95 L 600 100 L 592 105" stroke="#475569" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+    </section>
+
+    <section id="endpoints">
+      <h2>5. Backend API Endpoints Catalog</h2>
+      <p>The Express backend exposes secure endpoints grouped into five routes, all mapped from <code>/api</code>:</p>
+      
+      <h3>Authentication Endpoints (<code>/api/auth</code>)</h3>
+      <ul>
+        <li><code>POST /register</code>: Signs up a user profile using unique emails and hashed passwords.</li>
+        <li><code>POST /login</code>: Verifies input passwords and returns signed access JWT tokens.</li>
+        <li><code>GET /me</code>: Securely retrieves authenticated profile info. <code>(Auth Required)</code></li>
+      </ul>
+
+      <h3>Job Board Endpoints (<code>/api/jobs</code>)</h3>
+      <ul>
+        <li><code>GET /</code>: Fetches all job application cards stored by the user. <code>(Auth Required)</code></li>
+        <li><code>GET /interviews</code>: Retrieves only jobs currently in the <code>Interview</code> status. <code>(Auth Required)</code></li>
+        <li><code>POST /</code>: Adds a new job application document. <code>(Auth Required)</code></li>
+        <li><code>PUT /:id</code>: Modifies job details, notes, meeting links, or feedback. <code>(Auth Required)</code></li>
+        <li><code>DELETE /:id</code>: Permanently deletes a job application card. <code>(Auth Required)</code></li>
+        <li><code>PATCH /:id/status</code>: Performs column updates on card drags. <code>(Auth Required)</code></li>
+      </ul>
+
+      <h3>Resume Endpoints (<code>/api/resume</code>)</h3>
+      <ul>
+        <li><code>POST /upload</code>: Receives and parses PDF/DOCX resume files, storing files in local uploads directories. <code>(Auth Required)</code></li>
+        <li><code>GET /</code>: Fetches the extracted text contents and metadata of the saved file. <code>(Auth Required)</code></li>
+        <li><code>GET /download</code>: Pipes files back to client for rendering. <code>(Auth Query Token Required)</code></li>
+        <li><code>DELETE /</code>: Wipes resume database entries and unlinks storage files. <code>(Auth Required)</code></li>
+      </ul>
+
+      <h3>Real-time Chat Endpoints (<code>/api/chat</code>)</h3>
+      <ul>
+        <li><code>GET /rooms/list</code>: Fetches room objects, unread/message counts, and last comments. <code>(Auth Required)</code></li>
+        <li><code>GET /:room</code>: Returns page-sorted message history for a specific room. <code>(Auth Required)</code></li>
+      </ul>
+
+      <h3>Notifications Endpoints (<code>/api/notifications</code>)</h3>
+      <ul>
+        <li><code>GET /</code>: Returns notification objects for the user. <code>(Auth Required)</code></li>
+        <li><code>PUT /read-all</code>: Flags all unread notification objects as read. <code>(Auth Required)</code></li>
+        <li><code>PUT /:id/read</code>: Flags a single notification as read. <code>(Auth Required)</code></li>
+        <li><code>DELETE /:id</code>: Removes a notification. <code>(Auth Required)</code></li>
+      </ul>
+    </section>
+
+    <section id="external-integrations">
+      <h2>6. External & Browser Integrations</h2>
+      <p>The application makes extensive use of built-in HTML5 features and simulated API responses to enable key client-side flows:</p>
+      <ol>
+        <li><strong>Speech Recognition</strong>: Captured by the browser's <code>SpeechRecognition</code> Web API to transcribe mock interview answers live.</li>
+        <li><strong>Speech Synthesis</strong>: Executed by <code>window.speechSynthesis</code> to read interviewer prompts aloud.</li>
+        <li><strong>Simulated Question API</strong>: Located in <code>MockTests.jsx</code>. It provides fallback mocks to search and fetch developer topics dynamically when the database does not contain matches.</li>
+      </ol>
+    </section>
+  </div>
+
+</body>
+</html>
