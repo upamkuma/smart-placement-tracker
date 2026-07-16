@@ -328,8 +328,44 @@ const Dashboard = () => {
         ))}
       </div>
 
+      {/* ─── AI Career Tools Quick Access ──────────────────────────────────────── */}
+      <div className="mb-6 animate-fade-in">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            <h2 className="text-white font-bold text-sm uppercase tracking-wider">AI Career Tools</h2>
+            <span className="text-xs px-2 py-0.5 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 font-semibold">Gemini Powered</span>
+          </div>
+          <button onClick={() => navigate("/command-center")} className="text-xs text-slate-500 hover:text-indigo-400 transition-colors">
+            View all →
+          </button>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+          {[
+            { label: "Copilot", icon: "🤖", to: "/ai-copilot", color: "#6366f1" },
+            { label: "ATS V2", icon: "📊", to: "/ai-ats", color: "#8b5cf6" },
+            { label: "Optimizer", icon: "✨", to: "/ai-resume-optimizer", color: "#ec4899" },
+            { label: "Cover Letter", icon: "✉️", to: "/cover-letter", color: "#10b981" },
+            { label: "Job Match", icon: "🎯", to: "/job-matcher", color: "#f59e0b" },
+            { label: "Roadmap", icon: "🗺️", to: "/learning-roadmap", color: "#14b8a6" },
+            { label: "GitHub", icon: "💻", to: "/github-analyzer", color: "#e2e8f0" },
+            { label: "Interview", icon: "🎤", to: "/ai-interview-coach", color: "#ef4444" },
+          ].map((tool) => (
+            <button
+              key={tool.to}
+              onClick={() => navigate(tool.to)}
+              className="flex flex-col items-center gap-1.5 p-3 bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-xl hover:border-indigo-500/30 hover:bg-slate-800/60 transition-all group"
+            >
+              <span className="text-xl group-hover:scale-110 transition-transform">{tool.icon}</span>
+              <span className="text-[10px] text-slate-400 group-hover:text-white transition-colors font-medium text-center">{tool.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Resume & ATS Quick Access Card */}
       <div className="mb-6 animate-fade-in animate-float relative" style={{ animationDuration: '8s' }}>
+
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-purple-600/20 blur-xl rounded-3xl"></div>
         <div className="relative glass-card-premium p-6 sm:p-8 bg-dark-900/80 border-t border-white/20 shadow-2xl">
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl animate-pulse"></div>

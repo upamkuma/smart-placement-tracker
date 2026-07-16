@@ -48,6 +48,7 @@ app.use("/api/jobs", require("./routes/jobRoutes"));
 app.use("/api/chat", require("./routes/chatRoutes"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
 app.use("/api/resume", require("./routes/resumeRoutes"));
+app.use("/api/ai", require("./routes/aiRoutes"));
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

@@ -1,13 +1,27 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import NotificationBell from "./NotificationBell";
+
+const aiTools = [
+  { to: "/ai-copilot", label: "AI Career Copilot", icon: "🤖", desc: "Gemini-powered advisor" },
+  { to: "/ai-ats", label: "ATS Analyzer V2", icon: "📊", desc: "Semantic resume scoring" },
+  { to: "/ai-resume-optimizer", label: "Resume Optimizer", icon: "✨", desc: "AI bullet rewrites" },
+  { to: "/cover-letter", label: "Cover Letter AI", icon: "✉️", desc: "Instant generation" },
+  { to: "/job-matcher", label: "Job Matcher", icon: "🎯", desc: "Company match %" },
+  { to: "/learning-roadmap", label: "Learning Roadmap", icon: "🗺️", desc: "Personalized plan" },
+  { to: "/github-analyzer", label: "GitHub Analyzer", icon: "💻", desc: "Code quality score" },
+  { to: "/ai-interview-coach", label: "Interview Coach", icon: "🎤", desc: "Voice + AI eval" },
+  { to: "/command-center", label: "AI Command Center", icon: "🚀", desc: "All agents + Recruiter" },
+];
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [aiDropdownOpen, setAiDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     logout();
@@ -16,6 +30,17 @@ const Navbar = () => {
   };
 
   const isActive = (path) => location.pathname === path;
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setAiDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   // Nav links config
   const navLinks = [
@@ -39,7 +64,7 @@ const Navbar = () => {
     },
     {
       to: "/resume-ats",
-      label: "ATS Score",
+      label: "Resume",
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -57,7 +82,7 @@ const Navbar = () => {
     },
     {
       to: "/mock-tests",
-      label: "Mock Tests",
+      label: "Tests",
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
@@ -77,14 +102,15 @@ const Navbar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <span className="text-lg font-bold gradient-text hidden sm:block">
-              Smart Placement Tracker
-            </span>
-            <span className="text-lg font-bold gradient-text sm:hidden">SPT</span>
+            <div className="hidden sm:block">
+              <span className="text-sm font-black gradient-text">Smart Placement Tracker</span>
+              <span className="block text-[10px] text-indigo-400 font-semibold -mt-0.5 tracking-wider">AI CAREER PLATFORM</span>
+            </div>
+            <span className="text-lg font-bold gradient-text sm:hidden">SPT AI</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1.5">
+          <div className="hidden md:flex items-center gap-1">
             {isAuthenticated ? (
               <>
                 {/* Nav Links */}
@@ -92,7 +118,7 @@ const Navbar = () => {
                   <Link
                     key={link.to}
                     to={link.to}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200
                       ${isActive(link.to)
                         ? "bg-primary-500/15 text-primary-300 border border-primary-500/30"
                         : "text-dark-400 hover:text-white hover:bg-dark-800/60 border border-transparent"
@@ -103,18 +129,61 @@ const Navbar = () => {
                   </Link>
                 ))}
 
+                {/* AI Tools Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setAiDropdownOpen(!aiDropdownOpen)}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 border ${
+                      aiDropdownOpen
+                        ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
+                        : "bg-gradient-to-r from-indigo-600/20 to-purple-600/20 text-indigo-300 border-indigo-500/30 hover:from-indigo-600/30 hover:to-purple-600/30"
+                    }`}
+                  >
+                    <span className="text-sm">🤖</span>
+                    AI Tools
+                    <svg className={`w-3 h-3 transition-transform ${aiDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {aiDropdownOpen && (
+                    <div className="absolute right-0 top-12 w-64 bg-slate-900/95 backdrop-blur-xl border border-indigo-500/20 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden z-50">
+                      <div className="px-4 py-3 border-b border-white/5">
+                        <p className="text-xs font-bold text-indigo-400 uppercase tracking-wider">AI Career Tools</p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">Powered by Gemini 1.5 Flash</p>
+                      </div>
+                      <div className="py-2">
+                        {aiTools.map((tool) => (
+                          <Link
+                            key={tool.to}
+                            to={tool.to}
+                            onClick={() => setAiDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-indigo-500/10 transition-colors group"
+                          >
+                            <span className="text-lg w-6 text-center flex-shrink-0">{tool.icon}</span>
+                            <div>
+                              <p className="text-white text-xs font-semibold group-hover:text-indigo-300 transition-colors">{tool.label}</p>
+                              <p className="text-slate-500 text-[10px]">{tool.desc}</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Divider */}
-                <div className="w-px h-6 bg-dark-700/50 mx-1"></div>
+                <div className="w-px h-6 bg-dark-700/50 mx-1" />
 
                 {/* Notification Bell */}
                 <NotificationBell />
 
                 {/* User info */}
-                <div className="flex items-center gap-2.5 px-3 py-1.5 glass-card ml-1">
+                <div className="flex items-center gap-2 px-3 py-1.5 glass-card ml-1">
                   <div className="w-7 h-7 bg-gradient-to-br from-primary-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                     {user?.name?.charAt(0)?.toUpperCase() || "U"}
                   </div>
-                  <span className="text-dark-200 text-sm font-medium max-w-[100px] truncate">
+                  <span className="text-dark-200 text-xs font-medium max-w-[80px] truncate">
                     {user?.name || "User"}
                   </span>
                 </div>
@@ -123,8 +192,7 @@ const Navbar = () => {
                 <button
                   onClick={handleLogout}
                   id="nav-logout-btn"
-                  className="flex items-center gap-1.5 px-3 py-2 text-dark-400 hover:text-red-400 
-                    hover:bg-red-500/10 rounded-xl transition-all duration-200 text-sm font-medium"
+                  className="flex items-center gap-1.5 px-3 py-2 text-dark-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 text-xs font-medium"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -166,7 +234,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-dark-700/50 bg-dark-900/95 backdrop-blur-xl animate-slide-down">
+        <div className="md:hidden border-t border-dark-700/50 bg-dark-900/95 backdrop-blur-xl">
           <div className="px-4 py-4 space-y-1">
             {isAuthenticated ? (
               <>
@@ -177,6 +245,7 @@ const Navbar = () => {
                   <span className="text-dark-200 text-sm font-medium">{user?.name}</span>
                 </div>
 
+                <p className="text-xs text-slate-600 uppercase font-semibold px-3 mb-1">Main</p>
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -187,6 +256,19 @@ const Navbar = () => {
                   >
                     {link.icon}
                     {link.label}
+                  </Link>
+                ))}
+
+                <p className="text-xs text-indigo-500 uppercase font-semibold px-3 mb-1 mt-3">AI Tools</p>
+                {aiTools.map((tool) => (
+                  <Link
+                    key={tool.to}
+                    to={tool.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-indigo-300 hover:text-white hover:bg-indigo-500/10 transition-colors"
+                  >
+                    <span>{tool.icon}</span>
+                    {tool.label}
                   </Link>
                 ))}
 
