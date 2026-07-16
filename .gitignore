@@ -1,5 +1,25 @@
+# ===== Dependencies =====
 node_modules/
+
+# ===== Environment Variables =====
 .env
-.DS_Store
+.env.local
+.env.production
+
+# ===== Build Output =====
 dist/
 build/
+
+# ===== User Uploads (contains private user data — never commit) =====
+server/uploads/
+
+# ===== Logs =====
+logs/
+*.log
+npm-debug.log*
+
+# ===== OS / Editor =====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

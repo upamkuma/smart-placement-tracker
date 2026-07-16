@@ -1,8 +1,14 @@
 const Job = require("../models/Job");
 const { createNotification } = require("./notificationController");
 
-// Status change notification messages
-const statusNotifications = {
+/** Valid job status values — used for validation and notification lookup */
+const VALID_STATUSES = ["Applied", "Interview", "Offer", "Rejected"];
+
+/**
+ * Notification config keyed by status.
+ * Each entry provides the title, message factory, and icon for the notification.
+ */
+const STATUS_NOTIFICATIONS = {
   Applied: {
     title: "Application Submitted! 📝",
     message: (company, role) =>
@@ -29,14 +35,35 @@ const statusNotifications = {
   },
 };
 
+/**
+ * Creates a status-change notification for the given user and job.
+ * No-ops silently if there is no notification config for the provided status.
+ *
+ * @param {string} userId - The recipient user ID
+ * @param {string} status - The new job status
+ * @param {string} company - Company name (for the notification message)
+ * @param {string} role - Job role (for the notification message)
+ * @param {string} jobId - Related job ID
+ */
+const sendStatusNotification = async (userId, status, company, role, jobId) => {
+  const config = STATUS_NOTIFICATIONS[status];
+  if (!config) return;
+  await createNotification(
+    userId,
+    config.title,
+    config.message(company, role),
+    "status_change",
+    config.icon,
+    jobId
+  );
+};
+
 // @desc    Get all jobs for logged-in user
 // @route   GET /api/jobs
 // @access  Private
 const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ user: req.user._id }).sort({
-      createdAt: -1,
-    });
+    const jobs = await Job.find({ user: req.user._id }).sort({ createdAt: -1 });
     res.json(jobs);
   } catch (error) {
     console.error("Get jobs error:", error);
@@ -88,10 +115,9 @@ const createJob = async (req, res) => {
         .json({ message: "Please provide company name and role" });
     }
 
-    const validStatuses = ["Applied", "Interview", "Offer", "Rejected"];
-    if (status && !validStatuses.includes(status)) {
+    if (status && !VALID_STATUSES.includes(status)) {
       return res.status(400).json({
-        message: `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+        message: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`,
       });
     }
 
@@ -112,18 +138,8 @@ const createJob = async (req, res) => {
       user: req.user._id,
     });
 
-    // Create notification for new job
-    const notifConfig = statusNotifications[job.status];
-    if (notifConfig) {
-      await createNotification(
-        req.user._id,
-        notifConfig.title,
-        notifConfig.message(company, role),
-        "status_change",
-        notifConfig.icon,
-        job._id
-      );
-    }
+    // Notify the user about the initial job status
+    await sendStatusNotification(req.user._id, job.status, company, role, job._id);
 
     res.status(201).json(job);
   } catch (error) {
@@ -149,10 +165,9 @@ const updateJob = async (req, res) => {
         .json({ message: "Not authorized to update this job" });
     }
 
-    const validStatuses = ["Applied", "Interview", "Offer", "Rejected"];
-    if (req.body.status && !validStatuses.includes(req.body.status)) {
+    if (req.body.status && !VALID_STATUSES.includes(req.body.status)) {
       return res.status(400).json({
-        message: `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+        message: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`,
       });
     }
 
@@ -162,19 +177,15 @@ const updateJob = async (req, res) => {
       runValidators: true,
     });
 
-    // If status changed, create notification
+    // Notify only when the status actually changed
     if (req.body.status && req.body.status !== oldStatus) {
-      const notifConfig = statusNotifications[req.body.status];
-      if (notifConfig) {
-        await createNotification(
-          req.user._id,
-          notifConfig.title,
-          notifConfig.message(updatedJob.company, updatedJob.role),
-          "status_change",
-          notifConfig.icon,
-          updatedJob._id
-        );
-      }
+      await sendStatusNotification(
+        req.user._id,
+        req.body.status,
+        updatedJob.company,
+        updatedJob.role,
+        updatedJob._id
+      );
     }
 
     res.json(updatedJob);
@@ -216,10 +227,9 @@ const updateJobStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
-    const validStatuses = ["Applied", "Interview", "Offer", "Rejected"];
-    if (!status || !validStatuses.includes(status)) {
+    if (!status || !VALID_STATUSES.includes(status)) {
       return res.status(400).json({
-        message: `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+        message: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`,
       });
     }
 
@@ -239,19 +249,9 @@ const updateJobStatus = async (req, res) => {
     job.status = status;
     await job.save();
 
-    // Create notification if status actually changed
+    // Notify only when the status actually changed
     if (oldStatus !== status) {
-      const notifConfig = statusNotifications[status];
-      if (notifConfig) {
-        await createNotification(
-          req.user._id,
-          notifConfig.title,
-          notifConfig.message(job.company, job.role),
-          "status_change",
-          notifConfig.icon,
-          job._id
-        );
-      }
+      await sendStatusNotification(req.user._id, status, job.company, job.role, job._id);
     }
 
     res.json(job);

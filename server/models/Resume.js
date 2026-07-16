@@ -43,6 +43,7 @@ const resumeSchema = new mongoose.Schema(
 );
 
 // Only allow one resume per user (latest upload replaces old one)
-resumeSchema.index({ user: 1 });
+// Enforce one resume per user at the database level
+resumeSchema.index({ user: 1 }, { unique: true });
 
 module.exports = mongoose.model("Resume", resumeSchema);

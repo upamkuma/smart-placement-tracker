@@ -9,7 +9,6 @@ import Chat from "./pages/Chat";
 import Interviews from "./pages/Interviews";
 import ResumeATS from "./pages/ResumeATS";
 import MockTests from "./pages/MockTests";
-
 import Landing from "./pages/Landing";
 
 // Protected Route wrapper

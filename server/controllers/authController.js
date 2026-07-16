@@ -103,6 +103,7 @@ const getMe = async (req, res) => {
       email: user.email,
     });
   } catch (error) {
+    console.error("Get me error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

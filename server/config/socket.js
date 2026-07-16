@@ -1,101 +1,17 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Message = require("../models/Message");
+const { botReplies, keywordReplies } = require("./botData");
 
-// ===== SPT Bot Reply Logic =====
-// Responds with helpful placement tips based on room and message content
-
-const botReplies = {
-  general: [
-    "💡 Tip: Keep your LinkedIn profile updated with your latest projects and skills. Recruiters check it!",
-    "📌 Did you know? Companies typically take 1-2 weeks to respond after applying. Stay patient and keep applying!",
-    "🎯 Pro tip: Apply to at least 5-10 positions per week to maximize your chances. Quality over quantity though!",
-    "📊 Track every application here on SPT to stay organized. It really helps during placement season!",
-    "🌟 Networking is key! Connect with alumni and attend virtual career fairs to get referrals.",
-    "💼 Most companies have multiple interview rounds. Prepare for technical, HR, and group discussions!",
-    "🔑 Always customize your resume for each job application. One size does NOT fit all!",
-    "📝 Follow up with a thank-you email after interviews. It shows professionalism and genuine interest.",
-  ],
-  "interview-tips": [
-    "🎯 For technical interviews: Practice DSA on LeetCode/HackerRank for at least 1 hour daily.",
-    "💡 STAR Method: Structure your behavioral answers as Situation → Task → Action → Result.",
-    "📝 Always research the company before the interview. Know their products, culture, and recent news.",
-    "🤝 Prepare 3-5 good questions to ask the interviewer. It shows genuine interest in the role!",
-    "⏰ Join 5 minutes early for video interviews. Test your camera, mic, and internet beforehand.",
-    "👔 Dress professionally even for video calls. First impressions matter!",
-    "🧠 For system design interviews: Think aloud! Interviewers want to see your thought process.",
-    "💪 Practice mock interviews with friends or on Pramp.com. It builds confidence!",
-    "📌 Common mistake: Don't just say 'I worked on X.' Instead, explain the WHY and IMPACT.",
-  ],
-  "resume-help": [
-    "📄 Keep your resume to 1 page if you have less than 5 years of experience.",
-    "✅ Use action verbs: 'Built', 'Implemented', 'Optimized', 'Led' — not 'Responsible for'.",
-    "📊 Quantify achievements! 'Improved API response time by 40%' is better than 'Improved performance'.",
-    "🎨 Use our ATS Score feature to check how well your resume matches a job description!",
-    "💡 Include a skills section with technologies from the job description. ATS systems scan for keywords.",
-    "🔗 Add links to your GitHub, LinkedIn, and live project demos. Make it easy for recruiters!",
-    "❌ Avoid: Selfies as profile photos, fancy fonts, tables/columns (ATS can't read them), or typos.",
-    "📝 Tailor your summary/objective for each application. Generic statements don't stand out.",
-  ],
-  "offer-negotiation": [
-    "💰 Research salary ranges on Glassdoor and Levels.fyi before negotiating. Know your market value!",
-    "📊 For freshers, typical CTC in India: ₹3-6 LPA (service), ₹8-15 LPA (product), ₹15-40+ LPA (top tier).",
-    "🤝 Always negotiate politely: 'Based on my skills and market research, I was expecting around X...'",
-    "📝 Consider the full package: base salary, bonuses, stock options, learning opportunities, and WLB.",
-    "💡 It's okay to ask for time to consider an offer. Say: 'I'd like a few days to review this.'",
-    "✅ Get the offer in writing before accepting verbally. Review all terms carefully.",
-    "🎯 If you have multiple offers, be transparent (but tactful) to get the best deal.",
-    "💼 Remember: Your first job sets the baseline. Negotiate well — even a small bump compounds over time!",
-  ],
-  "off-topic": [
-    "😄 Taking breaks is important! The Pomodoro technique works great: 25 min work, 5 min break.",
-    "🎮 What's everyone's favorite coding playlist? Music really helps with focus!",
-    "☕ Fun fact: The average developer drinks 3+ cups of coffee per day. Stay hydrated too!",
-    "📚 Book recommendation: 'Cracking the Coding Interview' by Gayle McDowell — a must-read!",
-    "🏃 Don't forget physical health during placement season. Even a 20-minute walk helps!",
-    "🤖 AI is changing tech hiring. Brush up on ML basics even if you're not an ML engineer.",
-    "🌍 Remote work is here to stay. Build skills in async communication and self-management.",
-    "💬 Remember: Placement season stress is temporary. Your worth isn't defined by a single company's decision!",
-  ],
-};
-
-// Keyword-based contextual replies
-const keywordReplies = [
-  {
-    keywords: ["hello", "hi", "hey", "hii", "helo"],
-    reply: (name) => `Hey ${name}! 👋 Welcome to the chat! Feel free to discuss anything placement-related. I'm here to help!`,
-  },
-  {
-    keywords: ["help", "stuck", "confused", "don't know", "what should"],
-    reply: (name) => `Don't worry ${name}! 💪 Every placement journey has ups and downs. What specific area do you need help with? Resume, interviews, or applications?`,
-  },
-  {
-    keywords: ["reject", "rejected", "not selected", "failed"],
-    reply: (name) => `Hey ${name}, rejections are part of the journey! 🌟 Even top engineers faced many rejections before landing their dream job. Keep improving and applying!`,
-  },
-  {
-    keywords: ["offer", "selected", "got placed", "placed", "accepted"],
-    reply: (name) => `🎉 Congratulations ${name}! That's amazing news! Hard work pays off. Don't forget to help others in their journey too!`,
-  },
-  {
-    keywords: ["dsa", "leetcode", "algorithm", "data structure"],
-    reply: () => `📚 For DSA prep: Start with Easy problems → Medium → Hard. Focus on Arrays, Strings, Trees, Graphs, and DP. Aim for 200+ problems for good coverage!`,
-  },
-  {
-    keywords: ["resume", "cv", "ats"],
-    reply: () => `📄 Check out our ATS Score page! Upload your resume and match it against a job description to see how well it performs. Click 'ATS Score' in the navbar.`,
-  },
-  {
-    keywords: ["salary", "ctc", "package", "lpa"],
-    reply: () => `💰 Salary depends on company, role, and location. Research on Glassdoor/Levels.fyi. For freshers: Service (3-6 LPA) | Product (8-15 LPA) | Top Tier (15-40+ LPA).`,
-  },
-  {
-    keywords: ["thank", "thanks", "thx"],
-    reply: (name) => `You're welcome, ${name}! 😊 Happy to help. All the best for your placements! 🚀`,
-  },
-];
-
-// Get bot reply based on room and message
+/**
+ * Determines a bot reply based on the room context and message content.
+ * Keyword matches take priority; otherwise a random room-specific tip is returned.
+ *
+ * @param {string} room - The chat room ID
+ * @param {string} text - The user's message text
+ * @param {string} userName - The sender's display name
+ * @returns {string|null} Bot reply string, or null if the message is too short
+ */
 const getBotReply = (room, text, userName) => {
   const lowerText = text.toLowerCase();
 
@@ -109,15 +25,17 @@ const getBotReply = (room, text, userName) => {
     }
   }
 
-  // Room-specific random tip
+  // Fall back to a random room-specific tip
   const roomTips = botReplies[room] || botReplies.general;
-  const randomTip = roomTips[Math.floor(Math.random() * roomTips.length)];
-  return randomTip;
+  return roomTips[Math.floor(Math.random() * roomTips.length)];
 };
 
-
-
-// Setup Socket.IO with authentication and chat logic
+/**
+ * Configures Socket.IO with JWT authentication and all real-time chat event handlers.
+ * Tracks online users per room and broadcasts messages (including bot replies).
+ *
+ * @param {import("socket.io").Server} io - The Socket.IO server instance
+ */
 const setupSocket = (io) => {
   // Authenticate socket connections using JWT
   io.use(async (socket, next) => {
@@ -134,7 +52,7 @@ const setupSocket = (io) => {
         return next(new Error("User not found"));
       }
 
-      // Attach user to socket
+      // Attach user to socket for use in event handlers
       socket.user = {
         _id: user._id.toString(),
         name: user.name,
@@ -148,19 +66,19 @@ const setupSocket = (io) => {
     }
   });
 
-  // Track online users per room
-  const onlineUsers = new Map(); // room -> Set of { id, name }
+  // Track online users per room: Map<roomId, Map<userId, { id, name }>>
+  const onlineUsers = new Map();
 
   io.on("connection", (socket) => {
     console.log(`🔌 User connected: ${socket.user.name} (${socket.id})`);
 
     // Join a chat room
     socket.on("join-room", (room) => {
-      // Leave previous rooms (except socket's own room)
+      // Leave all current rooms except the socket's own room
       socket.rooms.forEach((r) => {
         if (r !== socket.id) {
           socket.leave(r);
-          // Remove from online users tracking
+          // Remove user from the departed room's online list
           if (onlineUsers.has(r)) {
             onlineUsers.get(r).delete(socket.user._id);
             io.to(r).emit("online-users", Array.from(onlineUsers.get(r).values()));
@@ -168,11 +86,11 @@ const setupSocket = (io) => {
         }
       });
 
-      // Join new room
+      // Join the new room
       socket.join(room);
       console.log(`📢 ${socket.user.name} joined room: ${room}`);
 
-      // Track online user
+      // Track this user as online in the new room
       if (!onlineUsers.has(room)) {
         onlineUsers.set(room, new Map());
       }
@@ -181,21 +99,18 @@ const setupSocket = (io) => {
         name: socket.user.name,
       });
 
-      // Broadcast updated online users to the room
-      io.to(room).emit(
-        "online-users",
-        Array.from(onlineUsers.get(room).values())
-      );
+      // Broadcast updated online users list to the room
+      io.to(room).emit("online-users", Array.from(onlineUsers.get(room).values()));
     });
 
-    // Handle incoming message
+    // Handle incoming chat message
     socket.on("send-message", async (data) => {
       const { room, text } = data;
 
       if (!text || !text.trim() || !room) return;
 
       try {
-        // Save message to database
+        // Persist message to database
         const message = await Message.create({
           room,
           sender: socket.user._id,
@@ -212,11 +127,10 @@ const setupSocket = (io) => {
           createdAt: message.createdAt,
         };
 
-        // Broadcast message to everyone in the room (including sender)
+        // Broadcast to everyone in the room (including sender)
         io.to(room).emit("new-message", messageData);
 
-        // ===== SPT Bot Auto-Reply =====
-        // Bot replies with helpful tips based on room context
+        // SPT Bot auto-reply with a 1.5–3 s delay for a realistic feel
         const botReply = getBotReply(room, text.trim(), socket.user.name);
         if (botReply) {
           setTimeout(async () => {
@@ -239,7 +153,7 @@ const setupSocket = (io) => {
             } catch (err) {
               console.error("Bot reply error:", err);
             }
-          }, 1500 + Math.random() * 1500); // 1.5-3s delay for realistic feel
+          }, 1500 + Math.random() * 1500);
         }
       } catch (error) {
         console.error("Send message error:", error);
@@ -261,11 +175,10 @@ const setupSocket = (io) => {
       });
     });
 
-    // Handle disconnection
+    // Handle disconnection — remove user from all rooms
     socket.on("disconnect", () => {
       console.log(`❌ User disconnected: ${socket.user.name}`);
 
-      // Remove from all rooms' online users
       onlineUsers.forEach((users, room) => {
         if (users.has(socket.user._id)) {
           users.delete(socket.user._id);

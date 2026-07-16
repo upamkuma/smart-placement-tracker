@@ -6,7 +6,6 @@ const messageSchema = new mongoose.Schema(
     room: {
       type: String,
       required: true,
-      index: true,
     },
     // Who sent the message (user ID or "bot")
     sender: {
@@ -30,5 +29,8 @@ const messageSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Index on (room, createdAt) — optimises paginated message fetching by room
+messageSchema.index({ room: 1, createdAt: -1 });
 
 module.exports = mongoose.model("Message", messageSchema);

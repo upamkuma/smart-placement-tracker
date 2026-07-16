@@ -76,4 +76,7 @@ const jobSchema = new mongoose.Schema(
   }
 );
 
+// Index on (user, createdAt) — optimises the most common query: fetch user's jobs sorted by date
+jobSchema.index({ user: 1, createdAt: -1 });
+
 module.exports = mongoose.model("Job", jobSchema);
