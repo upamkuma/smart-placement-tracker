@@ -1,111 +1,63 @@
-# Smart Placement Tracker
+# 🚀 Smart Placement Tracker AI 
+**An Agentic AI Career Operating System**
 
-A full-stack MERN application for students to track job applications, prepare for interviews, and collaborate with peers during placement season.
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://smart-placement-tracker-liard-seven.vercel.app/)
+[![Powered by Gemini](https://img.shields.io/badge/Powered%20by-Google%20Gemini-blue?logo=google)](https://ai.google.dev/)
 
-## 🚀 Features
+Smart Placement Tracker AI is a production-grade, full-stack application that transforms the traditional placement preparation process into an intelligent, data-driven workflow. Built with the **MERN stack** and deeply integrated with **Google Gemini's LLM**, this platform operates as a suite of autonomous AI agents designed to evaluate, coach, and optimize a candidate's career profile.
 
-- **Authentication** — Secure Register/Login with JWT
-- **Kanban Dashboard** — Drag & drop job cards between Applied / Interview / Offer / Rejected columns
-- **Job CRUD** — Add, edit, and delete job applications with detailed notes
-- **Interview Tracker** — Dedicated view for upcoming interviews with dates, types, and notes
-- **ATS Resume Scorer** — Upload your resume and match it against a job description
-- **Real-time Chat** — Room-based group chat powered by Socket.IO with an SPT Bot assistant
-- **Mock Tests** — Practice aptitude, technical, and HR questions
-- **Notifications** — In-app notifications for status changes
-- **Search & Filter** — Find jobs by company/role, filter by status
-- **Responsive Design** — Fully functional on mobile and desktop
+🌍 **Live Demo:** [https://smart-placement-tracker-liard-seven.vercel.app/](https://smart-placement-tracker-liard-seven.vercel.app/)
 
 ---
 
-## 🛠️ Tech Stack
+## 🧠 AI Agent Workflows (Proof of Work)
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18, Vite, Tailwind CSS, React Router v6 |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Real-time | Socket.IO |
-| Auth | JWT, bcryptjs |
-| File Parsing | pdf-parse, mammoth |
-| HTTP Client | Axios |
+This platform moves beyond basic wrappers by implementing specialized LLM prompts and agentic workflows to handle complex career-building tasks:
+
+*   **🕵️ ATS Semantic Matcher (V2)**: Uses semantic analysis to evaluate a PDF resume against a target Job Description. It bypasses simple keyword matching to deeply analyze context, generating a 1-100 fit score and identifying critical missing skills.
+*   **💻 AI GitHub Analyzer**: Simulates a senior engineering manager. It takes a GitHub profile URL, fetches metadata, and uses the LLM to review the candidate's code quality, architecture choices, and documentation rigor.
+*   **🎙️ AI Interview Coach**: A dynamic chat interface where the LLM acts as a strict technical interviewer. It provides real-time feedback on user responses and adapts questions based on the candidate's target role.
+*   **🗺️ AI Roadmap Generator**: Dynamically generates a weekly, structured learning path customized to the user's current skill gaps and target job role.
+*   **✉️ AI Cover Letter Engineer**: Ingests resume context and job requirements to author highly personalized, non-generic cover letters that highlight relevant past experiences.
 
 ---
 
-## 📁 Project Structure
+## 🏗️ System Architecture
 
-```
-Smart Placement Tracker/
-├── client/                       # React + Vite frontend
-│   ├── src/
-│   │   ├── components/           # Reusable UI components
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── NotificationBell.jsx
-│   │   │   ├── JobCard.jsx
-│   │   │   ├── JobModal.jsx
-│   │   │   ├── KanbanColumn.jsx
-│   │   │   ├── Toast.jsx
-│   │   │   └── Loader.jsx
-│   │   ├── context/              # React context providers
-│   │   │   └── AuthContext.jsx
-│   │   ├── pages/                # Route-level page components
-│   │   │   ├── Landing.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── Interviews.jsx
-│   │   │   ├── ResumeATS.jsx
-│   │   │   ├── MockTests.jsx
-│   │   │   └── Chat.jsx
-│   │   └── services/             # API & Socket.IO client helpers
-│   │       ├── api.js
-│   │       ├── socket.js
-│   │       ├── atsAnalyzer.js
-│   │       ├── fileParser.js
-│   │       └── placementContent.js
-│   ├── .env.example
-│   └── vite.config.js
-│
-├── server/                       # Express + MongoDB backend
-│   ├── config/
-│   │   ├── db.js                 # MongoDB connection
-│   │   ├── socket.js             # Socket.IO setup & event handlers
-│   │   ├── botData.js            # SPT Bot replies & keyword data
-│   │   └── upload.js             # Multer file upload configuration
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── jobController.js
-│   │   ├── chatController.js
-│   │   ├── notificationController.js
-│   │   └── resumeController.js
-│   ├── middleware/
-│   │   ├── authMiddleware.js     # JWT protection middleware
-│   │   └── errorMiddleware.js    # Global error handler
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Job.js
-│   │   ├── Message.js
-│   │   ├── Notification.js
-│   │   └── Resume.js
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── jobRoutes.js
-│   │   ├── chatRoutes.js
-│   │   ├── notificationRoutes.js
-│   │   └── resumeRoutes.js
-│   ├── uploads/                  # Stored resume files (gitignored)
-│   ├── .env.example
-│   └── server.js                 # App entry point
-│
-└── README.md
+```mermaid
+graph TD
+    Client[React + Tailwind CSS Frontend] -->|REST API + JWT| Gateway[Express Node.js Server]
+    Gateway --> Auth[Authentication Service]
+    Gateway --> JobManager[Job Application Kanban]
+    Gateway --> AIEngine[AI Orchestration Layer]
+    
+    AIEngine -->|Structured Prompts| Gemini[Google Gemini LLM]
+    AIEngine -->|Fetch Repos| GitHubAPI[GitHub REST API]
+    AIEngine -->|Extract Text| PDFParser[PDF Parsing Engine]
+    
+    Auth --> DB[(MongoDB Atlas)]
+    JobManager --> DB
+    AIEngine --> DB
 ```
 
+### ⚡ Technical Stack
+*   **Frontend**: React (Vite), Tailwind CSS, React Router (Vercel Deployed)
+*   **Backend**: Node.js, Express, JSON Web Tokens (JWT) (Render Deployed)
+*   **Database**: MongoDB Atlas (Mongoose ODM)
+*   **AI Integration**: `@google/generative-ai` (Gemini Flash Lite for speed & cost efficiency)
+*   **Parsing**: `pdf-parse` for resume ingestion
+
 ---
 
-## 🏃 How to Run Locally
+## 🛠️ Prompt Engineering & LLM Strategy
+To ensure the AI agents return reliable, structured data (rather than conversational text), the backend employs robust prompt engineering techniques:
+*   **Forced JSON Formatting**: Prompts are designed to strictly enforce JSON schemas. The backend uses custom parsing utilities to strip markdown wrappers and safely parse the output.
+*   **Model Fallbacks**: The AI controller implements a graceful degradation strategy. It attempts to use `gemini-flash-lite-latest` for low latency, and automatically falls back to `gemini-flash-latest` during rate limits (429) or high-load (503) errors.
+*   **Context Injection**: The LLM is injected with parsed resume data (`req.user`) securely retrieved from the database, giving the AI continuous context across different tools without requiring re-uploads.
 
-### Prerequisites
-- Node.js v18+
-- MongoDB (local instance or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+---
+
+## 🚀 Local Development Setup
 
 ### 1. Clone the repository
 ```bash
@@ -113,115 +65,32 @@ git clone https://github.com/upamkuma/smart-placement-tracker.git
 cd smart-placement-tracker
 ```
 
-### 2. Set up the backend
+### 2. Backend Setup
 ```bash
 cd server
 npm install
-cp .env.example .env
-# Edit .env with your MongoDB URI and JWT secret
-npm run dev
 ```
-
-The server starts at **http://localhost:5001**
-
-### 3. Set up the frontend
-```bash
-cd client
-npm install
-cp .env.example .env
-npm run dev
-```
-
-The client starts at **http://localhost:5173**
-
----
-
-## ⚙️ Environment Variables
-
-### `server/.env`
+Create a `.env` file in the `/server` directory:
 ```env
-MONGO_URI=mongodb://localhost:27017/placement-tracker
-JWT_SECRET=your_super_secret_jwt_key_here_change_in_production
 PORT=5001
-NODE_ENV=development
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GEMINI_API_KEY=your_google_gemini_api_key
+```
+Start the backend server:
+```bash
+npm run dev
 ```
 
-### `client/.env`
-```env
-# Production API base URL (used in production builds)
-VITE_PROD_API_URL=https://your-backend.onrender.com/api
-
-# Production Socket.IO URL (used in production builds)
-VITE_SOCKET_URL=https://your-backend.onrender.com
+### 3. Frontend Setup
+```bash
+cd ../client
+npm install
+```
+Start the Vite development server:
+```bash
+npm run dev
 ```
 
-> **Note**: In development, the Vite dev server proxies `/api` requests to `localhost:5001` automatically. You only need the `VITE_PROD_*` variables for production deployments.
-
 ---
-
-## 📡 API Endpoints
-
-### Auth
-| Method | Route | Description | Auth Required |
-|--------|-------|-------------|:---:|
-| POST | `/api/auth/register` | Register a new user | ❌ |
-| POST | `/api/auth/login` | Login and receive JWT | ❌ |
-| GET | `/api/auth/me` | Get current user profile | ✅ |
-
-### Jobs
-| Method | Route | Description | Auth Required |
-|--------|-------|-------------|:---:|
-| GET | `/api/jobs` | Get all jobs for logged-in user | ✅ |
-| POST | `/api/jobs` | Create a new job application | ✅ |
-| PUT | `/api/jobs/:id` | Update a job application | ✅ |
-| DELETE | `/api/jobs/:id` | Delete a job application | ✅ |
-| PATCH | `/api/jobs/:id/status` | Update job status (Kanban drag & drop) | ✅ |
-| GET | `/api/jobs/interviews` | Get only interview-stage jobs | ✅ |
-
-### Resume
-| Method | Route | Description | Auth Required |
-|--------|-------|-------------|:---:|
-| POST | `/api/resume/upload` | Upload and store a resume file | ✅ |
-| GET | `/api/resume` | Get current user's resume info | ✅ |
-| GET | `/api/resume/download` | Download/view stored resume | ✅ |
-| DELETE | `/api/resume` | Delete stored resume | ✅ |
-
-### Notifications
-| Method | Route | Description | Auth Required |
-|--------|-------|-------------|:---:|
-| GET | `/api/notifications` | Get all notifications | ✅ |
-| PUT | `/api/notifications/read-all` | Mark all as read | ✅ |
-| PUT | `/api/notifications/:id/read` | Mark one as read | ✅ |
-| DELETE | `/api/notifications/:id` | Delete a notification | ✅ |
-
-### Chat
-| Method | Route | Description | Auth Required |
-|--------|-------|-------------|:---:|
-| GET | `/api/chat/rooms/list` | List available chat rooms | ✅ |
-| GET | `/api/chat/:room` | Get messages for a room | ✅ |
-
-### Health
-| Method | Route | Description |
-|--------|-------|-------------|
-| GET | `/api/health` | Server health check |
-
----
-
-## 🚀 Deployment
-
-| Service | Recommendation |
-|---------|---------------|
-| Frontend | [Vercel](https://vercel.com) or [Netlify](https://netlify.com) |
-| Backend | [Render](https://render.com) or [Railway](https://railway.app) |
-| Database | [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) |
-| File Storage | Migrate `uploads/` to AWS S3 or Cloudinary for production |
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature/your-feature`
-5. Open a Pull Request
+*Built as a Proof of Work for modern AI-driven application development.*
