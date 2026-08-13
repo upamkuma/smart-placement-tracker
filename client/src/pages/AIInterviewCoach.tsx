@@ -1,15 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import aiAPI from "../services/aiService";
 
-const ScoreCard = ({ label, value, icon, color }) => (
+interface ScoreCardProps {
+  label: string;
+  value: string | number;
+  icon: string;
+  color: string;
+}
+
+const ScoreCard = ({ label, value, icon, color }: ScoreCardProps) => (
   <div className={`bg-slate-900/60 backdrop-blur-xl border rounded-xl p-4 text-center`} style={{ borderColor: `${color}30` }}>
     <div className="text-2xl mb-1">{icon}</div>
     <div className="text-2xl font-black" style={{ color }}>{value}</div>
     <div className="text-slate-400 text-xs mt-0.5">{label}</div>
   </div>
 );
+interface Question {
+  id: number;
+  q: string;
+  cat: string;
+}
 
-const questions = [
+const questions: Question[] = [
   { id: 1, q: "Tell me about yourself and your technical background.", cat: "Behavioral" },
   { id: 2, q: "Explain how you would design a URL shortener like bit.ly.", cat: "System Design" },
   { id: 3, q: "What is the difference between process and thread?", cat: "OS" },
@@ -20,16 +32,32 @@ const questions = [
   { id: 8, q: "How would you optimize a slow REST API?", cat: "Backend" },
 ];
 
+interface Evaluation {
+  verdict: string;
+  scores: {
+    technical: number | string;
+    communication: number | string;
+    confidence: number | string;
+    structure: number | string;
+    overall: number | string;
+  };
+  feedback: string;
+  strengths: string[];
+  improvements: string[];
+  betterAnswer: string;
+  followUpQuestions: string[];
+}
+
 export default function AIInterviewCoach() {
-  const [currentQ, setCurrentQ] = useState(null);
-  const [answer, setAnswer] = useState("");
-  const [listening, setListening] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [evaluation, setEvaluation] = useState(null);
-  const [error, setError] = useState("");
-  const [domain, setDomain] = useState("Software Engineering");
-  const [mode, setMode] = useState("select"); // select | answer | result
-  const recognitionRef = useRef(null);
+  const [currentQ, setCurrentQ] = useState<Question | null>(null);
+  const [answer, setAnswer] = useState<string>("");
+  const [listening, setListening] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
+  const [error, setError] = useState<string>("");
+  const [domain, setDomain] = useState<string>("Software Engineering");
+  const [mode, setMode] = useState<"select" | "answer" | "result">("select"); // select | answer | result
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
@@ -63,7 +91,7 @@ export default function AIInterviewCoach() {
     }
   };
 
-  const selectQuestion = (q) => {
+  const selectQuestion = (q: Question) => {
     setCurrentQ(q);
     setAnswer("");
     setEvaluation(null);
@@ -77,10 +105,10 @@ export default function AIInterviewCoach() {
     recognitionRef.current?.stop();
     setLoading(true); setError("");
     try {
-      const res = await aiAPI.evaluateAnswer(currentQ.q, answer, domain);
+      const res = await aiAPI.evaluateAnswer(currentQ!.q, answer, domain);
       setEvaluation(res.data.evaluation);
       setMode("result");
-    } catch (e) {
+    } catch (e: any) {
       setError(e.response?.data?.message || "Evaluation failed. Please try again.");
     } finally { setLoading(false); }
   };

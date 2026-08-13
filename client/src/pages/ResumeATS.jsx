@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "../components/Toast";
 import { analyzeResume } from "../services/atsAnalyzer";
-import { validateFile, formatFileSize } from "../services/fileParser";
+import { validateFile, formatFileSize, parseResumeFile } from "../services/fileParser";
 import { resumeAPI } from "../services/api";
 
 const ResumeATS = () => {
@@ -53,13 +53,30 @@ const ResumeATS = () => {
     setUploadedFile({ name: file.name, size: file.size, type: file.name.split(".").pop().toUpperCase() });
 
     try {
-      const res = await resumeAPI.upload(file);
-      const data = res.data;
-      setServerResumeId(data._id);
-      if (data.extractedText && data.extractedText.trim().length >= 20) {
-        setResumeText(data.extractedText);
+      // Run client-side extraction in parallel with server upload for maximum reliability
+      const [parsedText, res] = await Promise.allSettled([
+        parseResumeFile(file),
+        resumeAPI.upload(file)
+      ]);
+
+      if (res.status === 'rejected') {
+        throw res.reason;
       }
-      toast.success(`Resume uploaded to server! (${data.wordCount} words)`);
+
+      const data = res.value.data;
+      setServerResumeId(data._id);
+      
+      // Prefer client-parsed text as it's more reliable than server-side pdf-parse
+      const finalText = (parsedText.status === 'fulfilled' && parsedText.value) 
+        ? parsedText.value 
+        : data.extractedText || "";
+
+      if (finalText && finalText.trim().length >= 20) {
+        setResumeText(finalText);
+        toast.success(`Resume uploaded! (${finalText.split(/\\s+/).filter(Boolean).length} words)`);
+      } else {
+        toast.warning("Could not automatically extract text. Please paste it manually.");
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message || "Failed to upload file");
       setUploadedFile(null);

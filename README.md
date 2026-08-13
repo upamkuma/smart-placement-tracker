@@ -14,7 +14,7 @@ Smart Placement Tracker AI is a production-grade, full-stack application that tr
 
 This platform moves beyond basic wrappers by implementing specialized LLM prompts and agentic workflows to handle complex career-building tasks:
 
-*   **🕵️ ATS Semantic Matcher (V2)**: Uses semantic analysis to evaluate a PDF resume against a target Job Description. It bypasses simple keyword matching to deeply analyze context, generating a 1-100 fit score and identifying critical missing skills.
+*   **🕵️ ATS Semantic Matcher (V2 with RAG)**: Implements Retrieval-Augmented Generation (RAG) and semantic analysis to evaluate a PDF resume against a target Job Description. It bypasses simple keyword matching to deeply analyze context, generating a 1-100 fit score and identifying critical missing skills.
 *   **💻 AI GitHub Analyzer**: Simulates a senior engineering manager. It takes a GitHub profile URL, fetches metadata, and uses the LLM to review the candidate's code quality, architecture choices, and documentation rigor.
 *   **🎙️ AI Interview Coach**: A dynamic chat interface where the LLM acts as a strict technical interviewer. It provides real-time feedback on user responses and adapts questions based on the candidate's target role.
 *   **🗺️ AI Roadmap Generator**: Dynamically generates a weekly, structured learning path customized to the user's current skill gaps and target job role.
@@ -29,7 +29,7 @@ graph TD
     Client[React + Tailwind CSS Frontend] -->|REST API + JWT| Gateway[Express Node.js Server]
     Gateway --> Auth[Authentication Service]
     Gateway --> JobManager[Job Application Kanban]
-    Gateway --> AIEngine[AI Orchestration Layer]
+    Gateway --> AIEngine[Agentic AI Orchestration Layer & RAG Engine]
     
     AIEngine -->|Structured Prompts| Gemini[Google Gemini LLM]
     AIEngine -->|Fetch Repos| GitHubAPI[GitHub REST API]
